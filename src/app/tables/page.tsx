@@ -95,7 +95,7 @@ const Tables: NextPage = () => {
   const trClass = "md:text-4xl odd:bg-gray-100 hover:!bg-stone-200";
   const tdClass = "md:text-4xl p-2 border-b border-l text-left";
   return (
-    <div className="p-8 relative">
+    <div className="p-8">
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
