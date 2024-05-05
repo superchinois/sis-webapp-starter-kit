@@ -1,5 +1,7 @@
+import { type NextRequest } from 'next/server'
+
 export const dynamic = 'force-dynamic';
-export async function GET() {
+export async function GET(request: NextRequest) {
   const url_endpoint = "https://jsonplaceholder.typicode.com/users"
   const res = await fetch(url_endpoint, {
     headers: {

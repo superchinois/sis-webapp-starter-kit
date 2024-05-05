@@ -1,12 +1,15 @@
 'use client'
 import { NextPage } from "next";
 import React from "react";
+import { useFormState } from 'react-dom';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { SubmitButton } from '@/components/buttons/submit-button'
+import { getRizStats } from '@/app/actions/actions'
 
 type DeliveryRow = {
   itemcode: string
@@ -84,6 +87,7 @@ const columns = [
 ]
 const Tables: NextPage = () => {
   const [data, setData] = React.useState(() => [...defaultData])
+  const [formState, formAction] = useFormState(getRizStats, {success: null, data: null});
   const rerender = React.useReducer(() => ({}), {})[1]
   const table = useReactTable({
     data,
@@ -95,7 +99,24 @@ const Tables: NextPage = () => {
   const trClass = "md:text-4xl odd:bg-gray-100 hover:!bg-stone-200";
   const tdClass = "md:text-4xl p-2 border-b border-l text-left";
   return (
-    <div className="p-8">
+    <div className="p-8 flex flex-col">
+      <div>
+        <form action={formAction}>
+        <div className="flex flex-col">
+          <div>
+          <label htmlFor="start-date">Date de début:</label>
+          <input type="date" name="start-date" />
+          </div>
+          <div>
+          <label htmlFor="end-date">Date de fin:</label>
+          <input type="date" name="end-date" />  
+          </div>
+          <div><SubmitButton /></div>
+          <div>{formState.success}</div>
+        </div>
+        </form>
+      </div>
+      <div>
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
@@ -141,6 +162,7 @@ const Tables: NextPage = () => {
           ))}
         </tfoot>*/}
       </table>
+      </div>
       <div className="h-4" />
       <button onClick={() => rerender()} className="border p-2">
         Rerender
