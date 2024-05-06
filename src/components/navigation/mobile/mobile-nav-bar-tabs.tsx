@@ -9,6 +9,7 @@ export const MobileNavBarTabs: React.FC = ({}) => {
     <div className="mobile-nav-bar__tabs">
       <MobileNavBarTab path="/profile" label="Profile" />
       <MobileNavBarTab path="/public" label="Public" />
+      <MobileNavBarTab path="/tables" label="Tables" />
       {user && (
         <>
           <MobileNavBarTab path="/protected" label="Protected" />

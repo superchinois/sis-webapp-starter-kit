@@ -19,12 +19,10 @@ type DeliveryRow = {
 }
 
 type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
+  name: string
+  username: string
+  email: string
+  phone: string
 }
 
 const defaultData: Person[] = [
@@ -57,37 +55,50 @@ const defaultData: Person[] = [
 const columnHelper = createColumnHelper<Person>()
 
 const columns = [
-  columnHelper.accessor('firstName', {
+  columnHelper.accessor('name', {
     cell: info => info.getValue(),
     footer: info => info.column.id,
   }),
-  columnHelper.accessor(row => row.lastName, {
-    id: 'lastName',
+  columnHelper.accessor(row => row.username, {
+    id: 'username',
     cell: info => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
+    header: () => <span>Username</span>,
     footer: info => info.column.id,
   }),
-  columnHelper.accessor('age', {
-    header: () => 'Age',
-    cell: info => info.renderValue(),
+  columnHelper.accessor('email', {
+    header: () => 'Email',
+    cell: info => info.getValue(),
     footer: info => info.column.id,
   }),
-  columnHelper.accessor('visits', {
-    header: () => <span>Visits</span>,
+  columnHelper.accessor('phone', {
+    cell: info => <span className="text-base">{info.getValue()}</span>,
+    header: () => <span>Phone</span>,
     footer: info => info.column.id,
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('progress', {
-    header: 'Profile Progress',
-    footer: info => info.column.id,
-  }),
+  })
 ]
 const Tables: NextPage = () => {
-  const [data, setData] = React.useState(() => [...defaultData])
   const [formState, formAction] = useFormState(getRizStats, {success: null, data: null});
+  const [data, setData] = React.useState([])
+  const [isLoading, setLoading] = React.useState(true)
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('/api/items', {
+        method: 'GET',
+      });
+      if (response.ok) {
+        const { data } = await response.json();
+        setData(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+  React.useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const rerender = React.useReducer(() => ({}), {})[1]
   const table = useReactTable({
     data,
@@ -98,6 +109,8 @@ const Tables: NextPage = () => {
   const thClass = "md:text-4xl w-[200px] font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
   const trClass = "md:text-4xl odd:bg-gray-100 hover:!bg-stone-200";
   const tdClass = "md:text-4xl p-2 border-b border-l text-left";
+  if (isLoading) return <p>Loading...</p>
+  if (!data) return <p>No data</p>
   return (
     <div className="p-8 flex flex-col">
       <div>
