@@ -15,72 +15,32 @@ type DeliveryRow = {
   itemcode: string
   dscription: string
   quantity: number
-  nb_pal: number
 }
 
-type Person = {
-  name: string
-  username: string
-  email: string
-  phone: string
-}
-
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
-
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<DeliveryRow>()
 
 const columns = [
-  columnHelper.accessor('name', {
+  columnHelper.accessor('itemcode', {
     cell: info => info.getValue(),
     footer: info => info.column.id,
   }),
-  columnHelper.accessor(row => row.username, {
-    id: 'username',
+  columnHelper.accessor(row => row.dscription, {
+    id: 'dscription',
     cell: info => <i>{info.getValue()}</i>,
-    header: () => <span>Username</span>,
+    header: () => <span>Description</span>,
     footer: info => info.column.id,
   }),
-  columnHelper.accessor('email', {
-    header: () => 'Email',
+  columnHelper.accessor('quantity', {
+    header: () => 'Quantité (sac)',
     cell: info => info.getValue(),
-    footer: info => info.column.id,
-  }),
-  columnHelper.accessor('phone', {
-    cell: info => <span className="text-base">{info.getValue()}</span>,
-    header: () => <span>Phone</span>,
     footer: info => info.column.id,
   })
 ]
 const Tables: NextPage = () => {
   const [formState, formAction] = useFormState(getRizStats, {success: null, data: null});
   const [data, setData] = React.useState([])
-  const [isLoading, setLoading] = React.useState(true)
-  const fetchUsers = async () => {
+  //const [isLoading, setLoading] = React.useState(true)
+/*  const fetchUsers = async () => {
     try {
       const response = await fetch('/api/items', {
         method: 'GET',
@@ -94,10 +54,9 @@ const Tables: NextPage = () => {
       console.error(error);
       setLoading(false);
     }
-  };
-  React.useEffect(() => {
+  }; 
     fetchUsers();
-  }, []);
+  }, []);*/
 
   const rerender = React.useReducer(() => ({}), {})[1]
   const table = useReactTable({
@@ -109,28 +68,35 @@ const Tables: NextPage = () => {
   const thClass = "md:text-4xl w-[200px] font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
   const trClass = "md:text-4xl odd:bg-gray-100 hover:!bg-stone-200";
   const tdClass = "md:text-4xl p-2 border-b border-l text-left";
-  if (isLoading) return <p>Loading...</p>
-  if (!data) return <p>No data</p>
+  const dateLabel = "font-bold mb-1 text-gray-700 block";
+  const dateInput="pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium";
+  //if (isLoading) return <p>Loading...</p>
+  if (formState.data) {
+    //setLoading(false);
+    setData(formState.data);
+  }
+  //if (!data) return <p>No data</p>
   return (
     <div className="p-8 flex flex-col">
       <div>
         <form action={formAction}>
         <div className="flex flex-col">
           <div>
-          <label htmlFor="start-date">Date de début:</label>
-          <input type="date" name="start-date" />
+          <label htmlFor="start-date" className={dateLabel}>Date de début:</label>
+          <input className={dateInput}
+          type="date" name="start-date" />
           </div>
           <div>
-          <label htmlFor="end-date">Date de fin:</label>
-          <input type="date" name="end-date" />  
+          <label className={dateLabel} htmlFor="end-date">Date de fin:</label>
+          <input className={dateInput} type="date" name="end-date" />  
           </div>
           <div><SubmitButton /></div>
-          <div>{formState.success}</div>
         </div>
         </form>
       </div>
       <div>
-      <table>
+      {formState.data 
+       ?(<table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
@@ -158,29 +124,16 @@ const Tables: NextPage = () => {
             </tr>
           ))}
         </tbody>
-{/*        <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>*/}
-      </table>
-      </div>
+      </table>)
+       : null
+      }
       <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
-        Rerender
-      </button>
+        <button onClick={() => rerender()} className="border p-2">
+          Rerender
+        </button>
+      </div>
     </div>
+
   )
 };
 
