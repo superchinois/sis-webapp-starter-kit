@@ -23,23 +23,32 @@ const columns = [
   columnHelper.accessor('itemcode', {
     cell: info => info.getValue(),
     footer: info => info.column.id,
+    meta: {
+      text_align: () => ""
+    },
   }),
   columnHelper.accessor(row => row.dscription, {
     id: 'dscription',
-    cell: info => <i>{info.getValue()}</i>,
+    cell: info => info.getValue(),
     header: () => <span>Description</span>,
     footer: info => info.column.id,
+    meta: {
+      text_align: () => ""
+    },
   }),
   columnHelper.accessor('quantity', {
     header: () => 'Quantité (sac)',
     cell: info => info.getValue(),
     footer: info => info.column.id,
+    meta: {
+      text_align: () => "text-right"
+    },
   })
 ]
 const Tables: NextPage = () => {
-  const [formState, formAction] = useFormState(getRizStats, {success: null, data: null});
+  const [formState, formAction] = useFormState(getRizStats, null);
   const [data, setData] = React.useState([])
-  //const [isLoading, setLoading] = React.useState(true)
+  const [isLoading, setLoading] = React.useState(true)
 /*  const fetchUsers = async () => {
     try {
       const response = await fetch('/api/items', {
@@ -65,16 +74,18 @@ const Tables: NextPage = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const thClass = "md:text-4xl w-[200px] font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
+  const thClass = "md:text-4xl font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
   const trClass = "md:text-4xl odd:bg-gray-100 hover:!bg-stone-200";
-  const tdClass = "md:text-4xl p-2 border-b border-l text-left";
+  const tdClass = "md:text-4xl p-2 border-b border-l";
   const dateLabel = "font-bold mb-1 text-gray-700 block";
   const dateInput="pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium";
+  React.useEffect(()=>{
+    if (formState) {
+      setLoading(false);
+      setData(formState);
+    }
+  }, [formState]);
   //if (isLoading) return <p>Loading...</p>
-  if (formState.data) {
-    //setLoading(false);
-    setData(formState.data);
-  }
   //if (!data) return <p>No data</p>
   return (
     <div className="p-8 flex flex-col">
@@ -95,7 +106,7 @@ const Tables: NextPage = () => {
         </form>
       </div>
       <div>
-      {formState.data 
+      {formState 
        ?(<table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
@@ -117,7 +128,7 @@ const Tables: NextPage = () => {
           {table.getRowModel().rows.map(row => (
             <tr key={row.id} className={trClass}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className={tdClass}>
+                <td key={cell.id} className={tdClass+" "+cell.column.columnDef.meta.text_align()}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

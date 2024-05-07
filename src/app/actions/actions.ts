@@ -17,6 +17,7 @@ export async function getRizStats(formState: FormState, formData: FormData) {
       'Content-Type': 'application/json',
     },
   })
-
-  return {success: 1, data: res.json() || {}};
+  const resData = res.json() || [];
+  //const resData = [{itemcode: "123456", dscription: "toto", quantity: 100}]
+  return resData;
 } 
