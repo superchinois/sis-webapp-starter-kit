@@ -45,6 +45,12 @@ const columns = [
     },
   })
 ]
+const applyStyleToTd = (tdStyle: string, meta: any) => {
+  if(meta){
+    return tdStyle+" "+ meta.text_align();
+  }
+  return tdStyle;
+};
 const Tables: NextPage = () => {
   const [formState, formAction] = useFormState(getRizStats, null);
   const [data, setData] = React.useState([])
@@ -128,7 +134,7 @@ const Tables: NextPage = () => {
           {table.getRowModel().rows.map(row => (
             <tr key={row.id} className={trClass}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className={tdClass+" "+cell.column.columnDef.meta.text_align()}>
+                <td key={cell.id} className={applyStyleToTd(tdClass, cell.column.columnDef.meta)}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

@@ -2,7 +2,7 @@
 
 type FormState = {
 success: number | undefined, 
-data: Records<string, string> | undefined
+data: Record<string, string> | undefined
 }
 
 export async function getRizStats(formState: FormState, formData: FormData) {
