@@ -53,8 +53,8 @@ const applyStyleToTd = (tdStyle: string, meta: any) => {
 };
 const Tables: NextPage = () => {
   const [formState, formAction] = useFormState(getRizStats, null);
-  const [data, setData] = React.useState([])
-  const [isLoading, setLoading] = React.useState(true)
+  const [data, setData] = React.useState([]);
+  const [isLoading, setLoading] = React.useState(false);
 /*  const fetchUsers = async () => {
     try {
       const response = await fetch('/api/items', {
@@ -80,9 +80,9 @@ const Tables: NextPage = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const thClass = "md:text-4xl font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
-  const trClass = "md:text-4xl odd:bg-gray-100 hover:!bg-stone-200";
-  const tdClass = "md:text-4xl p-2 border-b border-l";
+  const thClass = "md:text-lg font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
+  const trClass = "md:text-lg odd:bg-gray-100 hover:!bg-stone-200";
+  const tdClass = "md:text-lg p-2 border-b border-l";
   const dateLabel = "font-bold mb-1 text-gray-700 block";
   const dateInput="pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium";
   React.useEffect(()=>{
@@ -107,7 +107,7 @@ const Tables: NextPage = () => {
           <label className={dateLabel} htmlFor="end-date">Date de fin:</label>
           <input className={dateInput} type="date" name="end-date" />  
           </div>
-          <div><SubmitButton /></div>
+          <div><SubmitButton/></div>
         </div>
         </form>
       </div>
