@@ -8,6 +8,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import {
+  getSortedRowModel,
+  SortingFn,
+  SortingState,
+} from '@tanstack/react-table'
 import { SubmitButton } from '@/components/buttons/submit-button'
 import { getRizStats } from '@/app/actions/actions'
 
@@ -55,6 +60,7 @@ const Tables: NextPage = () => {
   const [formState, formAction] = useFormState(getRizStats, null);
   const [data, setData] = React.useState([]);
   const [isLoading, setLoading] = React.useState(false);
+  const [sorting, setSorting] = React.useState<SortingState>([])
 /*  const fetchUsers = async () => {
     try {
       const response = await fetch('/api/items', {
@@ -78,6 +84,12 @@ const Tables: NextPage = () => {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(), //provide a sorting row model
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+
   })
 
   const thClass = "md:text-lg font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
@@ -119,12 +131,16 @@ const Tables: NextPage = () => {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 <th key={header.id} className={thClass}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                <div onClick={header.column.getToggleSortingHandler()}>
+                  {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                </div>
                 </th>
               ))}
             </tr>
