@@ -27,9 +27,9 @@ export const PageLayout: React.FC<PropsWithChildren> = ({ children }) => {
       <main className="overflow-y-scroll">
         <div className="page-layout__content">{children}</div>
       </main>
-      <footer className="page-footer">
+{/*      <footer className="page-footer">
         <PageFooter />
-      </footer>
+      </footer>*/}
     </div>
   );
 };

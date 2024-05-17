@@ -15,6 +15,7 @@ import {
 } from '@tanstack/react-table'
 import { SubmitButton } from '@/components/buttons/submit-button'
 import { getRizStats } from '@/app/actions/actions'
+import { BarsArrowDownIcon, BarsArrowUpIcon} from '@heroicons/react/16/solid'
 
 type DeliveryRow = {
   itemcode: string
@@ -92,9 +93,9 @@ const Tables: NextPage = () => {
 
   })
 
-  const thClass = "md:text-lg font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
-  const trClass = "md:text-lg odd:bg-gray-100 hover:!bg-stone-200";
-  const tdClass = "md:text-lg p-2 border-b border-l";
+  const thClass = "text-xs md:text-lg font-bold p-2 border-b border-l border-indigo-700 text-left bg-indigo-700 text-white";
+  const trClass = "text-xs md:text-lg odd:bg-gray-100 hover:!bg-stone-200";
+  const tdClass = "text-[12px] md:text-lg p-2 border-b border-l";
   const dateLabel = "font-bold mb-1 text-gray-700 block";
   const dateInput="pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium";
   React.useEffect(()=>{
@@ -131,15 +132,18 @@ const Tables: NextPage = () => {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
                 <th key={header.id} className={thClass}>
-                <div onClick={header.column.getToggleSortingHandler()}>
-                  {flexRender(
+                <div className="flex" onClick={header.column.getToggleSortingHandler()}>
+                  <span>{flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
+                  </span>
+                  <span>
                         {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
+                          asc: <BarsArrowUpIcon className="size-4 text-blue-500" />,
+                          desc: <BarsArrowDownIcon className="size-4 text-blue-500" />,
                         }[header.column.getIsSorted() as string] ?? null}
+                  </span>
                 </div>
                 </th>
               ))}
