@@ -23,10 +23,11 @@ import {
 } from "@/components/ui/select"
 
 import { ComboboxDemo } from "@/components/combobox"
+import { DataTableDemo } from "@/components/datatabledemo"
 
 const Shadcn: NextPage = () => {
   return (
-    <div className="container flex flex-col">
+    <div className="container flex flex-col items-center">
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Create project</CardTitle>
@@ -62,6 +63,7 @@ const Shadcn: NextPage = () => {
       </CardFooter>
     </Card>
     <ComboboxDemo />
+    <DataTableDemo />
     </div>
   )
 }
