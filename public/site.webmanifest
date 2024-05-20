@@ -1,0 +1,8 @@
+{
+    "name": "Webapp SIS",
+    "short_name": "webappsis",
+    "icons": [],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
