@@ -16,7 +16,7 @@ export const NavBarTab: React.FC<NavBarTabProps> = ({ path, label }) => {
   let navBarTabClassName = "nav-bar__tab";
 
   if (isRouteActive(path)) {
-    navBarTabClassName += " nav-bar__tab--active";
+    navBarTabClassName += " underline underline-offset-auto nav-bar__tab--active";
   }
 
   return (
