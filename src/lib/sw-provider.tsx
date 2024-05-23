@@ -14,9 +14,9 @@ const SwProvider : React.FC<PropsWithChildren> = ({ children }) =>
 	      scope: "./",
 	    }
 	  ).then(
-	    function (registration) {
-	      console.log("Service Worker registration successful with scope: ", registration.scope);
-	      setRegistration(registration);
+	    function (swRegistration) {
+	      console.log("Service Worker registration successful with scope: ", swRegistration.scope);
+	      setRegistration(swRegistration);
 	    },
 	    function (err) {
 	      console.log("Service Worker registration failed: ", err);

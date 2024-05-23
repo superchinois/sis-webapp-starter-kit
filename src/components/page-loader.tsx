@@ -6,7 +6,7 @@ export const PageLoader: React.FC = () => {
 
   return (
     <div className="container mx-auto flex justify-center loader">
-      <Image className="animate-spin" src={loadingImg} alt="Loading..." height={50} width={50} />
+      <Image className="animate-spin" src={loadingImg} alt="Loading..." height={50} width={50} priority={true} />
     </div>
   );
 };

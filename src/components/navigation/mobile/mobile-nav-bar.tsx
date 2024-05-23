@@ -50,7 +50,7 @@ export const MobileNavBar: React.FC = () => {
   };
 
   return (
-    <div className="container mobile-nav-bar__container">
+    <div className="container md:hidden mobile-nav-bar__container">
       <nav className="mobile-nav-bar">
         <MobileNavBarBrand handleClick={closeMobileMenu} />
         <MobileMenuToggleButton

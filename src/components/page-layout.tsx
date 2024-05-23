@@ -20,7 +20,7 @@ export const PageLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <div className="md:container md:mx-auto w-full">
-      <header className="sticky fixed top-0 w-full bg-slate-100">
+      <header className="sticky fixed top-0 h-12 w-full bg-slate-100">
         <NavBar />
         <MobileNavBar />
       </header>
