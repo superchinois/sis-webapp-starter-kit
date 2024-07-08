@@ -10,7 +10,7 @@ export const NavBarButtons = () => {
   const { user } = useUser();
 //<SignupButton />
   return (
-    <div className="nav-bar__buttons">
+    <div className="ml-6 nav-bar__buttons">
       {!user && (
         <>
           <LoginButton />

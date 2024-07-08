@@ -6,9 +6,9 @@ export const NavBarTabs: React.FC = () => {
   const { user } = useUser();
 
   return (
-    <div className="nav-bar__tabs">
+    <div className="flex flex-row gap-3 flex-1 nav-bar__tabs">
       < NavigationMenuDemo />
-      {/*<NavBarTab path="/profile" label="Profile" />
+{/*      <NavBarTab path="/profile" label="Profile" />
       <NavBarTab path="/public" label="Public" />
        <NavBarTab path="/tables" label="Tables" />
       {user && (

@@ -10,7 +10,7 @@ export const MobileNavBarBrand: React.FC<MobileNavBarBrandProps> = ({
   handleClick,
 }) => {
   return (
-    <div onClick={handleClick} className="mobile-nav-bar__brand">
+    <div onClick={handleClick} className="flex flex-1 mobile-nav-bar__brand">
       <Link href="/">
         <Image
           className="mobile-nav-bar__logo"
@@ -18,6 +18,7 @@ export const MobileNavBarBrand: React.FC<MobileNavBarBrandProps> = ({
           alt="Auth0 shield logo"
           width={24}
           height={24}
+          priority={false}
         />
       </Link>
     </div>

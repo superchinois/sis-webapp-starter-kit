@@ -10,7 +10,7 @@ export const MobileNavBarButtons = () => {
   const { user } = useUser();
 
   return (
-    <div className="mobile-nav-bar__buttons">
+    <div className="flex justify-center mobile-nav-bar__buttons">
       {!user && (
         <>
           <LoginButton />
