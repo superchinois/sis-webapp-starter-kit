@@ -1,11 +1,6 @@
 "use client"
 
 import * as React from "react"
-/*import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons"*/
 import { ChevronDownIcon, ChevronUpDownIcon, EllipsisHorizontalIcon} from "@heroicons/react/16/solid"
 import {
   ColumnDef,
@@ -82,7 +77,7 @@ export type Payment = {
 }
 
 export const columns: ColumnDef<Payment>[] = [
-  {
+/*  {
     id: "select",
     header: ({ table }) => (
       <Checkbox
@@ -103,7 +98,7 @@ export const columns: ColumnDef<Payment>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
+  },*/
   {
     accessorKey: "status",
     header: "Status",

@@ -6,6 +6,8 @@ import { siteMetadata } from "@/components/page-head";
 import { PreloadResources } from "@/app/preload-resources";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import SwProvider from '@/lib/sw-provider';
+import ReactHookFormProvider from '@/lib/form-provider';
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata = siteMetadata;
 
@@ -16,9 +18,12 @@ const RootLayout: React.FC<PropsWithChildren> = ({ children }) => {
       <body>
         <UserProvider>
         <SwProvider>
+        <ReactHookFormProvider>
           <PageLayout>{children}</PageLayout>
+        </ReactHookFormProvider>
         </SwProvider>
         </UserProvider>
+        <Toaster />
       </body>
     </html>
   );

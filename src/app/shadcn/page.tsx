@@ -24,10 +24,12 @@ import {
 
 import { ComboboxDemo } from "@/components/combobox"
 import { DataTableDemo } from "@/components/datatabledemo"
+import { DatePickerWithRange } from "@/components/date-picker"
+import { DatePickerForm } from '@/components/formdemo';
 
 const Shadcn: NextPage = () => {
   return (
-    <div className="container flex flex-col items-center">
+    <div className="container flex flex-col items-center gap-4">
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Create project</CardTitle>
@@ -64,6 +66,8 @@ const Shadcn: NextPage = () => {
     </Card>
     <ComboboxDemo />
     <DataTableDemo />
+    <DatePickerWithRange />
+    <DatePickerForm />
     </div>
   )
 }

@@ -21,6 +21,7 @@
     "@radix-ui/react-label":"latest",
     "@radix-ui/react-select":"latest",
     "@radix-ui/react-switch":"latest",
+    "@radix-ui/react-toast" : "latest",
     "@radix-ui/react-icons":"latest",
     "@radix-ui/react-popover": "latest",
     "class-variance-authority":"0.7.0",

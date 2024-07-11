@@ -17,6 +17,7 @@ import { SubmitButton } from '@/components/buttons/submit-button'
 import { getRizStats } from '@/app/actions/actions'
 import { BarsArrowDownIcon, BarsArrowUpIcon} from '@heroicons/react/16/solid'
 
+import { DatePickerForm } from '@/components/formdemo';
 type DeliveryRow = {
   itemcode: string
   dscription: string
@@ -108,6 +109,7 @@ const Tables: NextPage = () => {
   //if (!data) return <p>No data</p>
   return (
     <div className="p-8 flex flex-col">
+      <DatePickerForm />
       <div>
         <form action={formAction}>
         <div className="flex flex-col">
