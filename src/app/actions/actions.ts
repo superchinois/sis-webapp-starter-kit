@@ -32,16 +32,31 @@ export async function getRizStats(formState: FormState, formData: FormData) {
 }
 
 
-function zip(arr1, arr2) {
+function zip(arr1: string[], arr2: string[]) : Array<string[]> {
   return arr1.reduce((accumulator, curr, index) => {
     return [...accumulator, [curr, arr2[index]]];
-  }, []);
+  }, [] as Array<string[]>);
 }
 
-function toObject(zipped_values) {
-  return zipped_values.reduce((acc, z)=> Object.assign(acc, {[z[0]]:z[1]}), new Object())
+function toObject(zipped_values: Array<string[]>):Record<string, any> {
+  return zipped_values.reduce((acc, z)=> Object.assign(acc, {[z[0]]:z[1]}), new Object() as Record<string, string>)
 }
 
+export async function fetchWith(url: string, body: Record<string, any>):Promise<ReturnType<typeof fetch>> {
+    const encodedToken = getAccessToken();
+    const method = 'post';
+    const options = {
+          method: method,
+          headers: {
+            Authorization: `Bearer ${encodedToken}`,
+            "Content-Type": "application/json"
+          }
+        };
+    if (method == 'post'){
+        return fetch(url, {...options, body:JSON.stringify(body)});
+    }
+    return fetch(url,options);
+}
 export async function getAccessToken() {
   const values = [
     "AUTH0_TOKEN_ENDPOINT",
@@ -49,10 +64,9 @@ export async function getAccessToken() {
     "AUTH0_CLIENT_SECRET",
     "AUTH0_CLIENT_AUDIENCE"]
   const fields = ['url', 'client_id', 'client_secret', 'audience']
-  const auth0 = toObject(zip(fields, values.map(f => process.env[f])))
+  const auth0 = toObject(zip(fields, values.map(f => process.env[f]||'')))
   const {url:auth0_url, ...payload} = auth0
   const token_query_payload = JSON.stringify({...payload, grant_type:"client_credentials"})
-  console.log(auth0_url, token_query_payload)
   const res = await fetch(auth0_url, {
     method: 'POST',
     headers: {

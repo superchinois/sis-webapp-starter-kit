@@ -34,7 +34,7 @@ const Home = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      security_emails: true,
+      marketing_emails: true,
     },
   })
 
