@@ -31,7 +31,7 @@ const FormSchema = z.object({
 
 const Home = () => {
   const [data, setData] = React.useState({});
-  const [subscribed, setSubscribed] = React.useState({});
+  const [subscribed, setSubscribed] = React.useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     // defaultValues: {
@@ -51,7 +51,7 @@ const Home = () => {
     }
     React.useEffect(()=>{
       fetchOpeners().then(response=>setData(response));
-      fetchIsSubscribed("eric.lichamyon@sis.re").then(response => setSubscribed(response));
+      fetchIsSubscribed("eric.lichamyon@sis.re").then(response => setSubscribed(response.is_subscribed));
     }, [])
     return (
     <Form {...form}>

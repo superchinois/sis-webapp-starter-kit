@@ -6,6 +6,11 @@ success: number | undefined,
 data: Record<string, string> | undefined
 }
 
+type UserSubscription ={
+  email: string, 
+  is_subscribed: boolean
+}
+
 export async function getRizStats(formState: FormState, formData: FormData) {
   const session = await getSession();
 
@@ -54,14 +59,13 @@ async function build_fetch(url: string, method: string):Promise<(body: Record<st
   return (body: Record<string, any>) =>{
     if (method == 'post'){
       const post_options = {...options, body:JSON.stringify(body)}; 
-      console.log(post_options);
       return fetch(url, post_options);
     }
     return fetch(url, options)
   }
 }
 
-export async function fetchIsSubscribed(email: string): ReturnType<typeof fetch>{
+export async function fetchIsSubscribed(email: string): Promise<UserSubscription>{
   const getSubscribed = await build_fetch(`${process.env.MY_API_SERVER}/api/is_subscribed`, 'post');
   const response = await getSubscribed({email: email});
   return response.json();
