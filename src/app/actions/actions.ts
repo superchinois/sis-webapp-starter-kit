@@ -42,22 +42,39 @@ function toObject(zipped_values: Array<string[]>):Record<string, any> {
   return zipped_values.reduce((acc, z)=> Object.assign(acc, {[z[0]]:z[1]}), new Object() as Record<string, string>)
 }
 
-export async function fetchWith(url: string, body: Record<string, any>):Promise<ReturnType<typeof fetch>> {
-    const encodedToken = getAccessToken();
-    const method = 'post';
-    const options = {
-          method: method,
-          headers: {
-            Authorization: `Bearer ${encodedToken}`,
-            "Content-Type": "application/json"
-          }
-        };
-    if (method == 'post'){
-        return fetch(url, {...options, body:JSON.stringify(body)});
+async function build_fetch(url: string, method: string):Promise<(body: Record<string, any>)=>ReturnType<typeof fetch>>{
+  const {token_type, access_token} = await getAccessToken();
+  const options = {
+    method: method,
+    headers: {
+      Authorization: `${token_type} ${access_token}`,
+      "Content-Type": "application/json"
     }
-    return fetch(url,options);
+  };
+  return (body: Record<string, any>) =>{
+    if (method == 'post'){
+      const post_options = {...options, body:JSON.stringify(body)}; 
+      console.log(post_options);
+      return fetch(url, post_options);
+    }
+    return fetch(url, options)
+  }
 }
-export async function getAccessToken() {
+
+export async function fetchIsSubscribed(email: string): ReturnType<typeof fetch>{
+  const getSubscribed = await build_fetch(`${process.env.MY_API_SERVER}/api/is_subscribed`, 'post');
+  const response = await getSubscribed({email: email});
+  return response.json();
+}
+
+export async function fetchOpeners():ReturnType<typeof fetch> {
+    const url = `${process.env.MY_API_SERVER}/api/openers`;
+    const getOpeners = await build_fetch(url, 'get');
+    const response = await getOpeners({});
+    return response.json();
+}
+
+async function getAccessToken() {
   const values = [
     "AUTH0_TOKEN_ENDPOINT",
     "AUTH0_CLIENT_ID",

@@ -59,7 +59,7 @@ export const MobileNavBar: React.FC = () => {
         />
 
         {isMobileMenuOpen() && (
-          <div className="mobile-nav-bar__menu">
+          <div className="bg-slate-50 mobile-nav-bar__menu">
             <MobileNavBarTabs />
             <MobileNavBarButtons />
           </div>

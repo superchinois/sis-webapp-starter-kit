@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "@/components/ui/use-toast"
-import { getAccessToken } from '@/app/actions/actions'
+import { fetchOpeners, fetchIsSubscribed } from '@/app/actions/actions'
 
 //import { HeroBanner } from "@/components/hero-banner";
 //import { Auth0Features } from "@/components/auth0-features";
@@ -30,12 +30,13 @@ const FormSchema = z.object({
 
 
 const Home = () => {
-  const [credentials, setCredentials] = React.useState({})
+  const [data, setData] = React.useState({});
+  const [subscribed, setSubscribed] = React.useState({});
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      marketing_emails: true,
-    },
+    // defaultValues: {
+    //   marketing_emails: true,
+    // },
   })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -49,7 +50,8 @@ const Home = () => {
       })
     }
     React.useEffect(()=>{
-      getAccessToken().then(token => setCredentials(token))
+      fetchOpeners().then(response=>setData(response));
+      fetchIsSubscribed("eric.lichamyon@sis.re").then(response => setSubscribed(response));
     }, [])
     return (
     <Form {...form}>
