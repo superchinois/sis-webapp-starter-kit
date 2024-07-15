@@ -1,0 +1,25 @@
+FROM node:20.11-bookworm-slim AS deps
+WORKDIR /app
+ENV PATH=/app/node_modules/.bin:$PATH
+COPY package*.json ./
+RUN npm install
+
+FROM node:20.11-bookworm-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY src ./src
+COPY public ./public
+COPY package.json next.config.js tsconfig.json postcss.config.js tailwind.config.js ./
+RUN npm run build
+
+FROM node:20-alpine3.19
+ENV TZ="Indian/Reunion"
+ENV PATH=/app/node_modules/.bin:$PATH
+WORKDIR /app
+COPY .env.local ./.env
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+ENTRYPOINT ["npm"]
+CMD ["run","start"]
