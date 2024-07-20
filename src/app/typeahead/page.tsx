@@ -5,8 +5,9 @@ import * as React from "react"
 import { User, users } from './users'
 import { useFocusWithKeyboard, searchUsers } from './utils'
 import { useTypeahead } from './useTypeahead'
+import { Spinner } from "@/components/ui/spinner"
 
-
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const Typeahead: NextPage = () => {
   const [pickedSuggestion, setPickedSuggestion] = React.useState<null | User>(
     null,
@@ -20,6 +21,7 @@ const Typeahead: NextPage = () => {
   const {
     inputRef,
     isOpen: isShowingSuggestions,
+    isLoading,
     suggestions,
     value,
     handleChange,
@@ -29,6 +31,7 @@ const Typeahead: NextPage = () => {
   } = useTypeahead<User>({
     search: React.useCallback(async (query: string) => {
       const maxResults = 25
+      await sleep(1000);
       return searchUsers(users, query).slice(0, maxResults)
     }, []),
     onEnter: (suggestion, _selectedOption) => {
@@ -86,7 +89,13 @@ const Typeahead: NextPage = () => {
         </ul>
       </div>
 
-      <div ref={inputContainerRef}>
+      <div className="flex" ref={inputContainerRef}>
+        <div>
+          {isLoading?
+          <Spinner />
+          :null
+        }
+        </div>
         <div
           role="combobox"
           aria-label="Search"
@@ -115,7 +124,7 @@ const Typeahead: NextPage = () => {
         </div>
 
         {isShowingSuggestions && (
-          <div className="search-listbox-container">
+          <div className="search-listbox-container max-h-[300px] overflow-auto shadow-lg">
             {suggestions?.length === 0 ? (
               <p>No results</p>
             ) : (

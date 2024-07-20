@@ -9,7 +9,7 @@ import {
   retry,
 } from 'rxjs/operators'
 
-const minLength = 2
+const minLength = 3
 export const debounceDueTime = 200
 
 export type UseTypeaheadProps<T> = {
@@ -21,6 +21,7 @@ export function useTypeahead<T>({ search, onEnter }: UseTypeaheadProps<T>) {
   const behaviorSubjectRef = React.useRef(new BehaviorSubject(''))
   const behaviorSubject = behaviorSubjectRef.current
 
+  const [isLoading, setIsLoading] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false)
   const [value, setValue] = React.useState('')
   const [suggestions, setSuggestions] = React.useState<T[] | null>(null)
@@ -42,6 +43,7 @@ export function useTypeahead<T>({ search, onEnter }: UseTypeaheadProps<T>) {
         distinctUntilChanged(),
         filter((query: string) => query.length >= minLength),
         switchMap((query: string, _: number) => {
+          setIsLoading(true);
           return search(query)
         }),
         retry(0),
@@ -49,6 +51,7 @@ export function useTypeahead<T>({ search, onEnter }: UseTypeaheadProps<T>) {
       .subscribe(
         (value) => {
           setSuggestions(value)
+          setIsLoading(false)
         },
         (error) => {
           console.error(error)
@@ -156,11 +159,13 @@ export function useTypeahead<T>({ search, onEnter }: UseTypeaheadProps<T>) {
     setIsOpen(false)
     setSelected(null)
     setSuggestions(null)
+    setIsLoading(false)
   }, [])
 
   return {
     inputRef,
     isOpen,
+    isLoading,
     setIsOpen,
     suggestions,
     setSuggestions,
