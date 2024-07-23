@@ -10,7 +10,7 @@ import {
 } from 'rxjs/operators'
 
 const minLength = 3
-export const debounceDueTime = 200
+export const debounceDueTime = 400
 
 export type UseTypeaheadProps<T> = {
   search(query: string): Promise<T[]>
@@ -200,11 +200,11 @@ function useScrollToSelected(
       ) {
         const scrollBottom = listbox.clientHeight + listbox.scrollTop
         const elementBottom =
-          selectedOption.offsetTop + selectedOption.offsetHeight
+          selectedOption.offsetTop -listbox.offsetTop + selectedOption.offsetHeight
         if (elementBottom > scrollBottom) {
           listbox.scrollTop = elementBottom - listbox.clientHeight
-        } else if (selectedOption.offsetTop < listbox.scrollTop) {
-          listbox.scrollTop = selectedOption.offsetTop
+        } else if (selectedOption.offsetTop - listbox.offsetTop < listbox.scrollTop) {
+          listbox.scrollTop = selectedOption.offsetTop -listbox.offsetTop
         }
       }
     }
