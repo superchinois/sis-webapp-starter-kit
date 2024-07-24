@@ -8,6 +8,53 @@ export function searchUsers(users: User[], term: string) {
   return results
 }
 
+export function useScrollToInputWhenPanelOpens<T>({
+  isShowingSuggestions,
+  suggestions,
+  inputRef,
+}: {
+  isShowingSuggestions: boolean
+  suggestions: T[] | null
+  inputRef: React.RefObject<HTMLInputElement>
+}) {
+  React.useEffect(() => {
+    if (isShowingSuggestions && (suggestions?.length ?? 0) > 0) {
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          const { top } = inputRef.current.getBoundingClientRect()
+          window.scrollBy({
+            top,
+            behavior: 'smooth',
+          })
+        }
+      })
+    }
+  }, [isShowingSuggestions, suggestions, inputRef])
+}
+
+export function useOnClickOutside(
+  ref: React.RefObject<Element>,
+  handler: (e: Event) => void,
+) {
+  React.useEffect(() => {
+    const listener = (event: Event) => {
+      if (!ref.current || ref.current.contains(event.target as Node)) {
+        return
+      }
+
+      handler(event)
+    }
+
+    document.addEventListener('mousedown', listener)
+    document.addEventListener('touchstart', listener)
+
+    return () => {
+      document.removeEventListener('mousedown', listener)
+      document.removeEventListener('touchstart', listener)
+    }
+  }, [ref, handler])
+}
+
 export function useFocusWithKeyboard(
   inputRef: React.RefObject<HTMLInputElement>,
   onEscape?: () => void,

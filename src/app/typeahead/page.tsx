@@ -3,17 +3,34 @@ import { NextPage } from "next";
 import * as React from "react"
 
 import { User, users } from './users'
-import { useFocusWithKeyboard, searchUsers } from './utils'
+import { useFocusWithKeyboard, useScrollToInputWhenPanelOpens, useOnClickOutside } from './utils'
 import { useTypeahead } from './useTypeahead'
 import { Spinner } from "@/components/ui/spinner"
 
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+type Item = {
+  itemcode: string
+  itemname: string
+  vente: number
+  onhand: number
+}
+
 const Typeahead: NextPage = () => {
-  const [pickedSuggestion, setPickedSuggestion] = React.useState<null | User>(
+  const [pickedSuggestion, setPickedSuggestion] = React.useState<null | Item>(
     null,
   )
 
-  const onPick = (suggestion: User) => {
+  const searchItem = async (query: string) => {
+      const result = await fetch(`/api/items?search=${query}`,{
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+      const results = await result.json();
+      return results;
+  }
+
+  const onPick = (suggestion: Item) => {
     setPickedSuggestion(suggestion)
     clear()
   }
@@ -28,18 +45,14 @@ const Typeahead: NextPage = () => {
     handleKeyUp,
     selected,
     clear,
-  } = useTypeahead<User>({
-    search: React.useCallback(async (query: string) => {
-      const maxResults = 25
-      await sleep(1000);
-      return searchUsers(users, query).slice(0, maxResults)
-    }, []),
+  } = useTypeahead<Item>({
+    search: React.useCallback(searchItem, []),
     onEnter: (suggestion, _selectedOption) => {
       onPick(suggestion)
     },
   })
 
-  useScrollToInputWhenPanelOpens({
+  useScrollToInputWhenPanelOpens<Item>({
     isShowingSuggestions,
     suggestions,
     inputRef,
@@ -89,13 +102,7 @@ const Typeahead: NextPage = () => {
         </ul>
       </div>
 
-      <div className="flex" ref={inputContainerRef}>
-        <div>
-          {isLoading?
-          <Spinner />
-          :null
-        }
-        </div>
+      <div className="max-w-[700px] flex flex-col" ref={inputContainerRef}>
         <div
           role="combobox"
           aria-label="Search"
@@ -105,7 +112,7 @@ const Typeahead: NextPage = () => {
           aria-haspopup="listbox"
         >
           <input
-            className="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none  "
+            className="w-full border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none  "
             type="text"
             autoComplete="off"
             placeholder="Search"
@@ -121,28 +128,30 @@ const Typeahead: NextPage = () => {
             onChange={handleChange}
             onKeyUp={handleKeyUp}
           />
+          {isLoading?
+          <Spinner />
+          :null
+        }
         </div>
-
         {isShowingSuggestions && (
-          <div className="search-listbox-container max-h-[300px] overflow-auto shadow-lg">
+          <div className="search-listbox-container max-h-[300px] overflow-auto shadow-lg" id="search-listbox">
             {suggestions?.length === 0 ? (
               <p>No results</p>
             ) : (
               <ul
-                id="search-listbox"
                 role="listbox"
                 className="search-listbox scrollbar"
               >
                 {suggestions?.map((suggestion, index) => (
                   <li
-                    key={suggestion.id}
+                    key={suggestion.itemcode}
                     aria-selected={index === selected}
                     id={`search-listbox-option-${index}`}
                     role="option"
                     className="search-listbox-suggestion aria-selected:bg-slate-400 hover:cursor-pointer hover:bg-slate-400"
                     onClick={() => onPick(suggestion)}
                   >
-                    {suggestion.name} ({suggestion.username})
+                    {suggestion.itemcode} ({suggestion.itemname})
                   </li>
                 ))}
               </ul>
@@ -154,66 +163,19 @@ const Typeahead: NextPage = () => {
       {pickedSuggestion && (
         <>
           <p>
-            {pickedSuggestion.name} (@{pickedSuggestion.username})<br />
+            {pickedSuggestion.itemcode} (@{pickedSuggestion.itemname})<br />
           </p>
 
           <address>
-            {pickedSuggestion.phone}
+            {pickedSuggestion.vente}
             <br />
-            {pickedSuggestion.email.toLowerCase()}
+            {pickedSuggestion.onhand}
             <br />
           </address>
         </>
       )}
     </main>
   )
-}
-
-function useScrollToInputWhenPanelOpens({
-  isShowingSuggestions,
-  suggestions,
-  inputRef,
-}: {
-  isShowingSuggestions: boolean
-  suggestions: User[] | null
-  inputRef: React.RefObject<HTMLInputElement>
-}) {
-  React.useEffect(() => {
-    if (isShowingSuggestions && (suggestions?.length ?? 0) > 0) {
-      requestAnimationFrame(() => {
-        if (inputRef.current) {
-          const { top } = inputRef.current.getBoundingClientRect()
-          window.scrollBy({
-            top,
-            behavior: 'smooth',
-          })
-        }
-      })
-    }
-  }, [isShowingSuggestions, suggestions, inputRef])
-}
-
-function useOnClickOutside(
-  ref: React.RefObject<Element>,
-  handler: (e: Event) => void,
-) {
-  React.useEffect(() => {
-    const listener = (event: Event) => {
-      if (!ref.current || ref.current.contains(event.target as Node)) {
-        return
-      }
-
-      handler(event)
-    }
-
-    document.addEventListener('mousedown', listener)
-    document.addEventListener('touchstart', listener)
-
-    return () => {
-      document.removeEventListener('mousedown', listener)
-      document.removeEventListener('touchstart', listener)
-    }
-  }, [ref, handler])
 }
 
 export default Typeahead;
